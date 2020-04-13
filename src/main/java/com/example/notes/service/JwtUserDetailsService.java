@@ -2,21 +2,20 @@ package com.example.notes.service;
 
 import com.example.notes.entity.User;
 import com.example.notes.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.Optional;
 
-public class DefaultUserDetailsService implements UserDetailsService {
-
-    private final UserRepository userRepository;
-
-    public DefaultUserDetailsService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+@Service
+public class JwtUserDetailsService implements UserDetailsService {
+    @Autowired
+    private UserRepository userRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -26,9 +25,11 @@ public class DefaultUserDetailsService implements UserDetailsService {
         if (userEntity.isPresent()) {
             final User user = userEntity.get();
 
-            return new org.springframework.security.core.userdetails.User(user.getEmail(),
-                    passwordNoEncoding(user),
-                    Collections.singletonList(new SimpleGrantedAuthority(user.getRole())));
+            return new org.springframework.security.core.userdetails.User(
+                    user.getEmail(),
+                    user.getPassword(),
+                    Collections.singletonList(new SimpleGrantedAuthority(user.getRole()))
+            );
         }
 
         return null;
