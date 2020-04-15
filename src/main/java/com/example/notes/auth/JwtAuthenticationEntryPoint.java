@@ -1,4 +1,4 @@
-package com.example.notes.auth.config;
+package com.example.notes.auth;
 
 import java.io.IOException;
 import java.io.Serializable;
