@@ -1,19 +1,19 @@
 package com.example.notes.entity;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class Note {
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    public User user;
+    @ManyToMany
+    public List<User> user;
 
     @Id
     @Column
-    private int Id;
+    public int Id;
 
     @Column
-    private String value;
+    public String value;
 
 }

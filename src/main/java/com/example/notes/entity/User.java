@@ -1,7 +1,7 @@
 package com.example.notes.entity;
 
 import javax.persistence.*;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 public class User {
@@ -13,6 +13,6 @@ public class User {
     @Column
     public String password;
 
-    @OneToMany(mappedBy = "user")
-    public Set<Note> notes;
+    @ManyToMany
+    public List<Note> notes;
 }

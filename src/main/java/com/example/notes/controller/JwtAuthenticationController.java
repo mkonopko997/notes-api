@@ -19,14 +19,11 @@ public class JwtAuthenticationController {
     private JwtTokenUtil jwtTokenUtil;
     @Autowired
     private UserService userService;
-    @Autowired
-    private CurrentUserService currentUserService;
 
-    @PostMapping(path="/try")
+    @PostMapping()
     public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) {
         User user = this.userService.loadUserByUsername(authenticationRequest.username);
         if (authenticationRequest.password.equals(user.password)) {
-            this.currentUserService.user = user;
             final String token = jwtTokenUtil.generateToken(authenticationRequest.username);
             return ResponseEntity.ok(new JwtResponse(token));
         }
