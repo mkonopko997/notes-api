@@ -1,48 +1,52 @@
 package com.example.notes.controller;
 
-import com.example.notes.entity.Note;
-import com.example.notes.service.NoteService;
+import com.example.notes.entity.Attachment;
+import com.example.notes.service.AttachmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
 @Controller
 @RequestMapping(path = "/note")
-public class NoteController {
+public class AttachmentController {
     @Autowired
-    private NoteService noteService;
+    private AttachmentService attachmentService;
 
     @PostMapping()
     public @ResponseBody
     void create(
-            @RequestBody Note note
+            @RequestParam() MultipartFile file,
+            @RequestBody Attachment attachment
     ) {
-        noteService.create(note.value);
+
+
+        attachmentService.create(attachment.note.Id, file);
     }
 
     @GetMapping(path = "/all")
     public @ResponseBody
-    List<Note> getAll() {
-        return noteService.getAll();
+    List<Attachment> getAll() {
+        return attachmentService.getAll();
     }
 
     @GetMapping(path = "/{id}")
     public @ResponseBody
-    Note get(
+    Attachment get(
             @PathVariable String id
     ) {
-        return this.noteService.get(id);
+        return this.attachmentService.get(id);
     }
 
     @PutMapping(path = "/{id}")
     public @ResponseBody
     void update(
             @PathVariable String id,
-            @RequestBody Note note
+            @RequestBody String value
     ) {
-        noteService.update(id, note.value);
+        attachmentService.update(id, value);
     }
 
     @DeleteMapping(path = "/{id}")
@@ -50,7 +54,7 @@ public class NoteController {
     void delete(
             @PathVariable String id
     ) {
-        noteService.delete(id);
+        attachmentService.delete(id);
     }
 
 }

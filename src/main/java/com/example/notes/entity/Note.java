@@ -5,13 +5,15 @@ import java.util.List;
 
 @Entity
 public class Note {
+    @Id
+    @Column
+    public int Id;
 
     @ManyToMany
     public List<User> user;
 
-    @Id
-    @Column
-    public int Id;
+    @OneToMany
+    public List<Attachment> attachments;
 
     @Column
     public String value;
