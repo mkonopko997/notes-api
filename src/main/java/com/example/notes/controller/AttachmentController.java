@@ -1,16 +1,23 @@
 package com.example.notes.controller;
 
 import com.example.notes.entity.Attachment;
+import com.example.notes.model.NameAndId;
 import com.example.notes.service.AttachmentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @Controller
-@RequestMapping(path = "/note")
+@RequestMapping(path = "/attachment")
 public class AttachmentController {
     @Autowired
     private AttachmentService attachmentService;
@@ -19,34 +26,30 @@ public class AttachmentController {
     public @ResponseBody
     void create(
             @RequestParam() MultipartFile file,
-            @RequestBody Attachment attachment
-    ) {
-
-
-        attachmentService.create(attachment.note.Id, file);
+            @RequestParam() String noteId
+    ) throws IOException {
+        attachmentService.create(noteId, file);
     }
 
-    @GetMapping(path = "/all")
+    @GetMapping(path = "/all/{noteId}")
     public @ResponseBody
-    List<Attachment> getAll() {
-        return attachmentService.getAll();
+    List<NameAndId> getAll(
+            @PathVariable String noteId
+    ) {
+        return attachmentService.getAll(noteId);
     }
 
     @GetMapping(path = "/{id}")
     public @ResponseBody
-    Attachment get(
+    ResponseEntity<Resource> get(
             @PathVariable String id
     ) {
-        return this.attachmentService.get(id);
-    }
+        Attachment attachment = attachmentService.get(id);
 
-    @PutMapping(path = "/{id}")
-    public @ResponseBody
-    void update(
-            @PathVariable String id,
-            @RequestBody String value
-    ) {
-        attachmentService.update(id, value);
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(attachment.type))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + attachment.name + "\"")
+                .body(new ByteArrayResource(attachment.value));
     }
 
     @DeleteMapping(path = "/{id}")

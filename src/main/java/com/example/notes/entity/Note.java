@@ -1,13 +1,16 @@
 package com.example.notes.entity;
 
+import org.hibernate.annotations.GenericGenerator;
+
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
 public class Note {
     @Id
-    @Column
-    public int Id;
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
+    public String id;
 
     @ManyToMany
     public List<User> user;
