@@ -18,4 +18,9 @@ public class UserService {
         return userEntity.orElse(null);
     }
 
+    public String create(User user) {
+        userRepository.save(user);
+        return "Saved";
+    }
+
 }

@@ -10,9 +10,6 @@ public class User {
     @Column
     public String email;
 
-    @Column
-    public String password;
-
     @ManyToMany
     public List<Note> notes;
 }
